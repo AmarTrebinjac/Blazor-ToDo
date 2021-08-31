@@ -1,0 +1,20 @@
+@inject BlazorApp.Data.AppState AppState
+@using Data
+@using Microsoft.AspNetCore.Components
+
+<li class="card my-1" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">@ToDo.Title</h5>
+        <p class="card-text">@ToDo.Text</p>
+        <button @onclick="RemoveToDo" class="btn btn-outline-danger">Delete</button>
+    </div>
+</li>
+
+@code {
+    [Parameter]
+    public ToDo ToDo { get; set; }
+    public void RemoveToDo()
+    {
+        AppState.RemoveToDo(ToDo);
+    }
+}

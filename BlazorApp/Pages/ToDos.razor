@@ -1,0 +1,61 @@
+@page "/todos"
+@inject BlazorApp.Data.AppState AppState
+@using Data
+
+<div> 
+    <h1>To do list</h1>
+</div>
+<div class="row">
+    <div class="col-lg-3 col-12">
+    @if(AppState.ToDos != null && AppState.ToDos.Any()){
+        <ul class="list-unstyled">
+            @foreach (var todo in AppState.ToDos)
+            {
+             <ToDoItem ToDo="@todo" />
+            }
+        </ul>
+    }
+    else 
+    {
+            <p><i>You have not added any to dos yet</i></p>
+    }
+    
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">Title</span>
+        </div>
+        <input
+            @bind="NewToDo.Title"
+            @oninput="@((e) => {NewToDo.Title=(string)e.Value;})" 
+            type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">Text</span>
+        </div>
+        <input
+            @bind="NewToDo.Text"
+            @oninput="@((e) => {NewToDo.Text=(string)e.Value;})" 
+            type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+    </div>
+    <button @onclick="AddToDo" class="btn btn-primary" type="button" >Add to list</button>
+    </div>
+</div>
+
+@code {
+    private ToDo NewToDo = new ToDo();
+    private Random rand = new Random();
+
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += StateHasChanged;
+    }
+
+    public void AddToDo()
+    {
+        NewToDo.Id = rand.Next(1, 1000);
+        AppState.AddToDo(NewToDo);
+        NewToDo = new ToDo();
+    }
+}
